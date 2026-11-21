@@ -107,6 +107,7 @@ function StatCard({ icon, label, value, change, note, tone }) {
 
 function DashboardPage({ items, search, onNavigate, salesOrders, purchaseOrders, transactions, businessCategory, organization, cloudSession }) {
   const { formatMoney, formatNumber, locale } = useCurrency()
+  const [dateRange, setDateRange] = useState(30)
   const selectedCategory = BUSINESS_CATEGORIES.find((entry) => entry.id === businessCategory)
   const lowItems = items.filter((item) => item.quantity > 0 && item.quantity <= item.reorderLevel)
   const outOfStockCount = items.filter((item) => item.quantity <= 0).length
@@ -127,17 +128,30 @@ function DashboardPage({ items, search, onNavigate, salesOrders, purchaseOrders,
   const filteredLowItems = lowItems.filter((item) =>
     `${item.name} ${item.category} ${item.sku}`.toLowerCase().includes(search.toLowerCase()),
   )
-  const dateLabel = new Intl.DateTimeFormat(locale, { weekday: 'long', month: 'long', day: 'numeric' }).format(new Date())
+  const now = new Date()
+  const hour = now.getHours()
+  const greeting = hour < 12 ? 'Good morning' : hour < 18 ? 'Good afternoon' : 'Good evening'
+  const dateLabel = new Intl.DateTimeFormat(locale, { weekday: 'long', month: 'long', day: 'numeric' }).format(now)
+  const rangeStart = new Date(now)
+  rangeStart.setHours(0, 0, 0, 0)
+  rangeStart.setDate(rangeStart.getDate() - dateRange)
+  const inSelectedRange = (dateValue) => {
+    if (!dateValue) return true
+    const date = new Date(dateValue)
+    return Number.isNaN(date.getTime()) || date >= rangeStart
+  }
+  const rangedSalesOrders = salesOrders.filter((order) => inSelectedRange(order.orderDate))
+  const rangedTransactions = transactions.filter((entry) => inSelectedRange(entry.date))
 
   return (
     <div className="dashboard-content">
       <div className="welcome-row">
         <div>
           <div className="eyebrow">KOSTHAGARA <span className="eyebrow-dot">·</span> {dateLabel.toUpperCase()} <span className="eyebrow-dot">·</span> YOUR DAILY OVERVIEW</div>
-          <h1>Good morning, {organization?.organizationName ?? 'Amelia'} <span className="wave">✳</span></h1>
+          <h1>{greeting}, {organization?.ownerName?.split(/\s+/)[0] ?? 'Amelia'} <span className="wave">✳</span></h1>
           <p className="welcome-subtitle">Here&apos;s what&apos;s happening with your {selectedCategory?.name ?? 'business'}{organization ? ` in ${organization.city}, ${organization.countryName}` : ''} today.</p>
         </div>
-        <button className="date-button" type="button"><span>◷</span> Last 30 days <span className="date-chevron">⌄</span></button>
+        <label className="date-button"><span aria-hidden="true">◷</span><select value={dateRange} onChange={(event) => setDateRange(Number(event.target.value))} aria-label="Dashboard date range"><option value={7}>Last 7 days</option><option value={30}>Last 30 days</option><option value={90}>Last 90 days</option><option value={3650}>All time</option></select></label>
       </div>
       <CategoryBranding category={selectedCategory} compact />
 
@@ -190,8 +204,8 @@ function DashboardPage({ items, search, onNavigate, salesOrders, purchaseOrders,
       <section className="bottom-grid">
         <article className="panel orders-panel">
           <div className="panel-heading"><div><h2>Recent sales orders</h2><p>A quick look at recorded customer orders.</p></div><button className="text-link" type="button" onClick={() => onNavigate('Sales orders')}>All orders <Icon name="arrow" size={16} /></button></div>
-          {salesOrders.slice(0, 2).map((order, index) => <div className="order-row" key={order.id}><span className={`order-avatar ${index === 0 ? 'pink' : 'peach'}`}>{order.customer.split(/\s+/).map((part) => part[0]).slice(0, 2).join('').toUpperCase()}</span><span className="order-customer"><strong>{order.customer}</strong><small>#{order.id} · {order.orderDate}</small></span><span className="order-total">{formatMoney(order.lines.reduce((sum, line) => sum + line.quantity * line.unitPrice, 0), order.currencyCode)}</span><span className={`order-status ${order.status === 'Completed' ? 'delivered' : ''}`}>{order.status}</span></div>)}
-          {!salesOrders.length && <div className="order-row"><span className="order-customer"><strong>No sales orders yet</strong><small>New orders will appear here.</small></span></div>}
+          {rangedSalesOrders.slice(0, 2).map((order, index) => <div className="order-row" key={order.id}><span className={`order-avatar ${index === 0 ? 'pink' : 'peach'}`}>{order.customer.split(/\s+/).map((part) => part[0]).slice(0, 2).join('').toUpperCase()}</span><span className="order-customer"><strong>{order.customer}</strong><small>#{order.id} · {order.orderDate}</small></span><span className="order-total">{formatMoney(order.lines.reduce((sum, line) => sum + line.quantity * line.unitPrice, 0), order.currencyCode)}</span><span className={`order-status ${order.status === 'Completed' ? 'delivered' : ''}`}>{order.status}</span></div>)}
+          {!rangedSalesOrders.length && <div className="order-row"><span className="order-customer"><strong>No sales orders in this range</strong><small>Try a wider date range.</small></span></div>}
         </article>
         <article className="panel dashboard-insights"><div className="panel-heading"><div><h2>Business overview</h2><p>Recorded values stay grouped by their original currency.</p></div><button className="text-link" type="button" onClick={() => onNavigate('Reports')}>View reports <Icon name="arrow" size={16} /></button></div>
           <div className="dashboard-revenue"><span>Current inventory value</span><strong>{Object.keys(inventoryTotals).length ? Object.entries(inventoryTotals).map(([code, total]) => formatMoney(total, code)).join(' · ') : 'Cost data not available'}</strong></div>
@@ -200,11 +214,47 @@ function DashboardPage({ items, search, onNavigate, salesOrders, purchaseOrders,
             ? Object.entries(salesTotals).map(([code, total]) => <div className="dashboard-revenue" key={code}><span>{code} recorded revenue</span><strong>{formatMoney(total, code)}</strong></div>)
             : <p className="commerce-empty-note">No completed sales yet. Pending and confirmed orders are not revenue.</p>}
           <div className="dashboard-movement-heading"><strong>Recent inventory movements</strong><button className="text-link" type="button" onClick={() => onNavigate('Inventory')}>Inventory <Icon name="arrow" size={14} /></button></div>
-          {transactions.slice(0, 3).map((entry) => <div className="dashboard-movement" key={entry.id}><span><strong>{entry.itemName}</strong><small>{entry.type} · {entry.date}</small></span><b>{formatNumber(entry.quantity, { maximumFractionDigits: 3 })} {entry.unit}</b></div>)}
-          {!transactions.length && <p className="commerce-empty-note">No inventory movement has been recorded.</p>}
+          {rangedTransactions.slice(0, 3).map((entry) => <div className="dashboard-movement" key={entry.id}><span><strong>{entry.itemName}</strong><small>{entry.type} · {entry.date}</small></span><b>{formatNumber(entry.quantity, { maximumFractionDigits: 3 })} {entry.unit}</b></div>)}
+          {!rangedTransactions.length && <p className="commerce-empty-note">No inventory movement was recorded in this range.</p>}
         </article>
       </section>
       <footer className="page-footer"><span>© 2026 Kosthagara</span><span>Made with care for the makers <span className="footer-heart">♥</span></span><span>{cloudSession ? 'Private Supabase workspace' : 'Browser-local demo data'}</span></footer>
+    </div>
+  )
+}
+
+function HelpCenterPage({ onNavigate }) {
+  const guides = [
+    ['Items', 'items', 'Build a complete catalog for materials and finished products.'],
+    ['Inventory', 'inventory', 'Record opening stock, purchases, adjustments, and usage.'],
+    ['Sales orders', 'orders', 'Track customers, order lines, statuses, and completed revenue.'],
+    ['Recipes', 'recipes', 'Link ingredients to finished products and calculate expected usage.'],
+    ['Business settings', 'settings', 'Change the business category, region, currency, and language.'],
+  ]
+
+  return (
+    <div className="page-content help-center-page">
+      <header className="page-heading">
+        <div>
+          <span className="page-eyebrow">KOSTHAGARA HELP CENTER</span>
+          <h1>How can we help?</h1>
+          <p>Short guides for keeping your workspace accurate and useful.</p>
+        </div>
+      </header>
+      <div className="help-guide-grid">
+        {guides.map(([label, icon, description]) => (
+          <article className="help-guide-card" key={label}>
+            <span className="help-guide-icon"><Icon name={icon} size={22} /></span>
+            <h2>{label}</h2>
+            <p>{description}</p>
+            <button className="text-link" type="button" onClick={() => onNavigate(label)}>Open {label}<Icon name="arrow" size={16} /></button>
+          </article>
+        ))}
+      </div>
+      <article className="help-demo-note">
+        <strong>Working with demo data</strong>
+        <p>Changes are saved in this browser or the connected private workspace. Use Business settings to export a backup before clearing browser data or changing devices.</p>
+      </article>
     </div>
   )
 }
@@ -251,6 +301,25 @@ function AppContent({ cloudWorkspace, cloudSession, cloudClient, onCloudSignOut 
   const { items, transactions, recipes, orders, salesOrders, suppliers, purchaseOrders, expenses = [], plannerScenarios = [] } = workspaces[businessCategory]
   const [modal, setModal] = useState(null)
   const [notice, setNotice] = useState('')
+  const searchInputRef = useRef(null)
+
+  useEffect(() => {
+    function focusSearch(event) {
+      if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'k') {
+        event.preventDefault()
+        searchInputRef.current?.focus()
+      }
+      if (event.key === 'Escape') {
+        setShowProfileMenu(false)
+      }
+    }
+    window.addEventListener('keydown', focusSearch)
+    return () => window.removeEventListener('keydown', focusSearch)
+  }, [])
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'instant' })
+  }, [activePage])
 
   useEffect(() => {
     setCurrencyPersistenceEnabled(!cloudSession)
@@ -1005,7 +1074,7 @@ function AppContent({ cloudWorkspace, cloudSession, cloudClient, onCloudSignOut 
     })
   }
 
-  const showDashboard = !['Items', 'Inventory', 'Activity History', 'Business Insights', 'Sales orders', 'Production orders', 'Purchases', 'Reports', 'Recipes', 'What If? Simulator', 'Part-Time Business Planner', 'Business settings'].includes(activePage)
+  const showDashboard = !['Items', 'Inventory', 'Activity History', 'Business Insights', 'Sales orders', 'Production orders', 'Purchases', 'Reports', 'Recipes', 'What If? Simulator', 'Part-Time Business Planner', 'Business settings', 'Help center'].includes(activePage)
 
   if (entryFlowOpen) {
     return <>
@@ -1040,7 +1109,7 @@ function AppContent({ cloudWorkspace, cloudSession, cloudClient, onCloudSignOut 
       <main className="main-area" id="dashboard">
         <header className="topbar">
           <button className="topbar-brand" type="button" onClick={() => setActivePage('Dashboard')} aria-label="Kosthagara home"><img src="/kosthagara-logo.png" alt="Kosthagara" /></button>
-          <label className="search-box"><Icon name="search" size={18} /><input type="search" placeholder="Search products, orders..." value={search} onChange={(event) => setSearch(event.target.value)} aria-label="Search products and orders" /><kbd>⌘ K</kbd></label>
+          <label className="search-box"><Icon name="search" size={18} /><input ref={searchInputRef} type="search" placeholder="Search products, orders..." value={search} onChange={(event) => setSearch(event.target.value)} aria-label="Search products and orders" /><kbd>{navigator.platform?.includes('Mac') ? '⌘ K' : 'Ctrl K'}</kbd></label>
           <div className="topbar-actions">
             <button className="icon-button notification-button" type="button" aria-label={`${lowStockCount} low-stock alerts`} onClick={() => setActivePage('Inventory')}><Icon name="bell" /><span className="notification-dot" /></button>
             <div className="topbar-divider" />
@@ -1068,6 +1137,7 @@ function AppContent({ cloudWorkspace, cloudSession, cloudClient, onCloudSignOut 
         {activePage === 'Recipes' && <Suspense fallback={<div className="page-content"><p>Loading recipes…</p></div>}><RecipesPage key={businessCategory} items={items} recipes={recipes} onSave={saveRecipe} onDelete={deleteRecipe} /></Suspense>}
         {activePage === 'What If? Simulator' && <SimulatorPage key={businessCategory} items={items} recipes={recipes} reservations={reservations} businessCategory={businessCategory} />}
         {activePage === 'Part-Time Business Planner' && <PlannerPage key={businessCategory} category={businessCategory} currency={currency} workspaces={workspaces} scenarios={plannerScenarios} onScenariosChange={updatePlannerScenarios} />}
+        {activePage === 'Help center' && <HelpCenterPage onNavigate={setActivePage} />}
         {activePage === 'Business settings' && <BusinessSettings
           category={businessCategory}
           onCategoryChange={changeBusinessCategory}
