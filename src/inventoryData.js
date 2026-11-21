@@ -43,13 +43,13 @@ export function createOpeningTransactions(items) {
     sku: item.sku,
     type: 'Opening stock',
     quantity: item.quantity,
-    reason: 'Demo opening balance',
+    reason: 'Opening balance',
     balance: item.quantity,
     unit: item.unit,
     supplier: item.supplier,
     cost: item.costPerUnit,
     currencyCode: item.currencyCode ?? 'USD',
-    notes: 'Initial demo inventory',
+    notes: 'Initial inventory',
   })).reverse()
 }
 

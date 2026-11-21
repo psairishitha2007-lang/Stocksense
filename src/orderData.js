@@ -206,6 +206,6 @@ export function createDemoOrders(items, recipes = {}) {
     dispatched: false,
     lines: [{ productId: product.id, quantity: 2 }],
     requirements: [],
-    notes: 'Demo proposed order',
+    notes: 'Proposed order',
   }]
 }

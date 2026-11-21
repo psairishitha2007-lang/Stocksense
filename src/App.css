@@ -3312,7 +3312,19 @@ td strong {
   }
 
   .inventory-table {
-    min-width: 1030px;
+    min-width: 1120px;
+  }
+
+  .item-code {
+    display: inline-flex;
+    max-width: 118px;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+
+  .item-code-barcode svg {
+    max-width: 118px;
   }
 
   .inventory-table th,

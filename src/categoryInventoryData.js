@@ -105,7 +105,7 @@ export function createDemoWorkspaces() {
         name,
         phone: '',
         email: '',
-        notes: 'Demo supplier listed on opening inventory.',
+        notes: 'Supplier listed on opening inventory.',
       })),
       purchaseOrders: [],
       expenses: [],

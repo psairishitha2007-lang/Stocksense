@@ -70,7 +70,7 @@ function Welcome({ onSignUp, onSignIn, onContinue }) {
             <button className="primary-button" type="button" onClick={onSignUp}>Create a account</button>
             <button className="secondary-button" type="button" onClick={onSignIn}>Sign in</button>
           </div>
-          <button className="entry-return-link" type="button" onClick={onContinue}>Return to the existing demo workspace</button>
+          <button className="entry-return-link" type="button" onClick={onContinue}>Return to the existing local workspace</button>
         </div>
         <div className="welcome-art">
           <div className="welcome-art-orbit orbit-a" />
@@ -85,7 +85,7 @@ function Welcome({ onSignUp, onSignIn, onContinue }) {
           <span className="welcome-art-chip chip-three">✦ Ideas</span>
         </div>
       </section>
-      <p className="entry-demo-note">Demo experience only · No secure accounts or backend. Workspace data may be saved in this browser, but is not secure or synced.</p>
+      <p className="entry-demo-note">Local workspace mode · Workspace data is saved only in this browser and is not synced.</p>
     </main>
   )
 }
@@ -118,10 +118,10 @@ function SignUp({ onSubmit, onSignIn, onBack }) {
     if (!values.phone.trim() || values.phone.replace(/\D/g, '').length < 6) nextErrors.phone = 'Enter a valid phone number.'
     if (!selectedCountry) nextErrors.countryText = 'Choose a country from the list.'
     if (!values.location.trim()) nextErrors.location = 'Enter your city, town, or location.'
-    if (values.password.length < 8) nextErrors.password = 'Use at least 8 characters for this demo form.'
+    if (values.password.length < 8) nextErrors.password = 'Use at least 8 characters for this form.'
     if (!values.confirmPassword) nextErrors.confirmPassword = 'Confirm your password.'
     else if (values.password !== values.confirmPassword) nextErrors.confirmPassword = 'The passwords do not match.'
-    if (!values.consent) nextErrors.consent = 'Accept the demo terms and privacy notice to continue.'
+    if (!values.consent) nextErrors.consent = 'Accept the terms and privacy notice to continue.'
     setErrors(nextErrors)
     if (Object.keys(nextErrors).length) return
 
@@ -143,9 +143,9 @@ function SignUp({ onSubmit, onSignIn, onBack }) {
         <div className="entry-card-heading">
           <span className="entry-eyebrow">LET&apos;S GET TO KNOW YOU</span>
           <h1>Create your account</h1>
-          <p>This is a local demonstration form. Details are not sent to a server.</p>
+          <p>This is a local setup form. Details are not sent to a server.</p>
         </div>
-        <div className="entry-security-note" role="note"><strong>Demo only</strong><span>No account authentication is configured. Your password is used only for this form check and is discarded before continuing.</span></div>
+        <div className="entry-security-note" role="note"><strong>Local setup</strong><span>No account authentication is configured. Your password is used only for this form check and is discarded before continuing.</span></div>
         <form className="management-form entry-form" onSubmit={submit} noValidate>
           <div className="form-grid">
             <label className="form-field"><span>Full name *</span><input autoFocus autoComplete="name" value={values.fullName} onChange={(event) => update('fullName', event.target.value)} aria-invalid={Boolean(errors.fullName)} />{errors.fullName && <small className="field-error" role="alert">{errors.fullName}</small>}</label>
@@ -156,10 +156,10 @@ function SignUp({ onSubmit, onSignIn, onBack }) {
             <label className="form-field"><span>Password *</span><input type="password" autoComplete="new-password" value={values.password} onChange={(event) => update('password', event.target.value)} aria-invalid={Boolean(errors.password)} />{errors.password && <small className="field-error" role="alert">{errors.password}</small>}</label>
             <label className="form-field"><span>Confirm password *</span><input type="password" autoComplete="new-password" value={values.confirmPassword} onChange={(event) => update('confirmPassword', event.target.value)} aria-invalid={Boolean(errors.confirmPassword)} />{errors.confirmPassword && <small className="field-error" role="alert">{errors.confirmPassword}</small>}</label>
           </div>
-          <details className="entry-policy"><summary>Read demo terms and privacy notice</summary><p>This demonstration does not create a secure account, transmit a verification message, or save your details to a server. Do not enter a password you use elsewhere. Profile details remain only in this browser session.</p></details>
-          <label className="entry-consent"><input type="checkbox" checked={values.consent} onChange={(event) => update('consent', event.target.checked)} /><span>I have read and accept the demo terms and privacy notice. *</span></label>
+          <details className="entry-policy"><summary>Read terms and privacy notice</summary><p>This setup does not create a secure account, transmit a verification message, or save your details to a server. Do not enter a password you use elsewhere. Profile details remain only in this browser session.</p></details>
+          <label className="entry-consent"><input type="checkbox" checked={values.consent} onChange={(event) => update('consent', event.target.checked)} /><span>I have read and accept the terms and privacy notice. *</span></label>
           {errors.consent && <small className="field-error" role="alert">{errors.consent}</small>}
-          <button className="primary-button entry-submit" type="submit">Continue to demo verification</button>
+          <button className="primary-button entry-submit" type="submit">Continue to verification</button>
         </form>
         <p className="entry-footer">Already using Kosthagara? <button type="button" className="entry-inline-button" onClick={onSignIn}>Sign in</button></p>
       </section>
@@ -188,7 +188,7 @@ function SignIn({ onBack, onContinue, onSignUp }) {
         <div className="entry-card-heading">
           <span className="entry-eyebrow">WELCOME BACK</span>
           <h1>Sign in</h1>
-          <p>Account sign-in is not connected in this demo.</p>
+          <p>Account sign-in is not connected in local setup.</p>
         </div>
         <div className="entry-security-note" role="note"><strong>No authentication provider</strong><span>Submitting credentials does not authenticate you. Password input is cleared and never stored.</span></div>
         <form className="management-form entry-form" onSubmit={submit} noValidate>
@@ -197,7 +197,7 @@ function SignIn({ onBack, onContinue, onSignUp }) {
           {message && <p className="form-error-message" role="status">{message}</p>}
           <button className="primary-button entry-submit" type="submit">Continue</button>
         </form>
-        <button className="secondary-button entry-submit" type="button" onClick={onContinue}>Open existing demo workspace</button>
+        <button className="secondary-button entry-submit" type="button" onClick={onContinue}>Open existing local workspace</button>
         <p className="entry-footer">New to Kosthagara? <button type="button" className="entry-inline-button" onClick={onSignUp}>Create a account</button></p>
       </section>
       <button className="entry-return-link" type="button" onClick={onBack}>Back to welcome</button>
@@ -216,7 +216,7 @@ function Verification({ email, onBack, onContinue }) {
   function submit(event) {
     event.preventDefault()
     if (!isDemoVerificationInputValid(code)) {
-      setError('Enter six digits to continue through this demo step.')
+      setError('Enter six digits to continue.')
       return
     }
     setError('')
@@ -228,17 +228,17 @@ function Verification({ email, onBack, onContinue }) {
       <section className="entry-card sign-in-card">
         <div className="verification-mark" aria-hidden="true">✉</div>
         <div className="entry-card-heading">
-          <span className="entry-eyebrow">DEMONSTRATION STEP</span>
+          <span className="entry-eyebrow">VERIFICATION STEP</span>
           <h1>Verification screen</h1>
           <p>We have not sent a code to <strong>{email}</strong>. No email or SMS provider is configured.</p>
         </div>
         <div className="entry-security-note" role="note"><strong>Not real verification</strong><span>This screen checks only that six digits were entered. It does not verify your identity or a one-time password.</span></div>
         <form className="management-form entry-form" onSubmit={submit} noValidate>
-          <label className="form-field"><span>Six-digit demo input</span><input className="otp-input" inputMode="numeric" autoComplete="one-time-code" maxLength="6" value={code} onChange={(event) => { setCode(event.target.value.replace(/\D/g, '').slice(0, 6)); setError('') }} placeholder="· · · · · ·" aria-invalid={Boolean(error)} /></label>
+          <label className="form-field"><span>Six-digit code</span><input className="otp-input" inputMode="numeric" autoComplete="one-time-code" maxLength="6" value={code} onChange={(event) => { setCode(event.target.value.replace(/\D/g, '').slice(0, 6)); setError('') }} placeholder="· · · · · ·" aria-invalid={Boolean(error)} /></label>
           {error && <p className="form-error-message" role="alert">{error}</p>}
-          <button className="primary-button entry-submit" type="submit">Continue demo onboarding</button>
+          <button className="primary-button entry-submit" type="submit">Continue setup</button>
         </form>
-        <p className="entry-resend">{notice} <button type="button" className="entry-inline-button" onClick={resend}>Resend OTP (demo)</button></p>
+        <p className="entry-resend">{notice} <button type="button" className="entry-inline-button" onClick={resend}>Resend code</button></p>
         <button className="entry-return-link" type="button" onClick={onBack}>Back to sign-up details</button>
       </section>
     </main>
@@ -312,9 +312,9 @@ function Onboarding({ initialCountryCode, onBack, onComplete, cloudManaged = fal
         <div className="entry-card-heading">
           <span className="entry-eyebrow">YOUR WORKSPACE, YOUR WAY</span>
           <h1>Set up your organisation</h1>
-          <p>{cloudManaged ? 'Choose the category and regional display settings for your account workspace.' : 'Choose the category and regional display settings for this demo workspace.'}</p>
+          <p>{cloudManaged ? 'Choose the category and regional display settings for your account workspace.' : 'Choose the category and regional display settings for this local workspace.'}</p>
         </div>
-        <div className="entry-security-note" role="note"><strong>{cloudManaged ? 'Private account workspace' : 'One shared demo workspace'}</strong><span>{cloudManaged ? 'This workspace is stored under your signed-in account and protected by database access policies.' : 'Organisation isolation and permanent saving are not available. This setup selects an existing category workspace for this session.'}</span></div>
+        <div className="entry-security-note" role="note"><strong>{cloudManaged ? 'Private account workspace' : 'One shared local workspace'}</strong><span>{cloudManaged ? 'This workspace is stored under your signed-in account and protected by database access policies.' : 'This setup selects an existing category workspace and saves it in this browser when storage is available.'}</span></div>
         <form className="management-form entry-form" onSubmit={submit} noValidate>
           <div className="form-grid">
             <label className="form-field form-field-full"><span>Organisation or business name *</span><input autoFocus value={values.organizationName} onChange={(event) => update('organizationName', event.target.value)} aria-invalid={Boolean(errors.organizationName)} />{errors.organizationName && <small className="field-error" role="alert">{errors.organizationName}</small>}</label>
@@ -327,10 +327,10 @@ function Onboarding({ initialCountryCode, onBack, onComplete, cloudManaged = fal
             <label className="form-field"><span>Default currency *</span><select value={values.currency} onChange={(event) => update('currency', event.target.value)}>{CURRENCIES.map((currency) => <option key={currency.code} value={currency.code}>{currency.code} — {currency.name}</option>)}</select>{errors.currency && <small className="field-error" role="alert">{errors.currency}</small>}</label>
           </div>
           <div className="onboarding-brand-preview"><CategoryLogo category={values.category} /><span>{BUSINESS_CATEGORIES.find((category) => category.id === values.category)?.name ?? 'Business category'}</span></div>
-          <div className="form-actions entry-form-actions">{!cloudManaged && <button className="secondary-button" type="button" onClick={onBack}>Back</button>}<button className="primary-button" type="submit">{cloudManaged ? 'Create private workspace' : 'Create demo organisation'}</button></div>
+          <div className="form-actions entry-form-actions">{!cloudManaged && <button className="secondary-button" type="button" onClick={onBack}>Back</button>}<button className="primary-button" type="submit">{cloudManaged ? 'Create private workspace' : 'Create organisation'}</button></div>
         </form>
       </section>
-      {!cloudManaged && <p className="entry-demo-note">Demo setup only · No organisation or account is saved to a server.</p>}
+      {!cloudManaged && <p className="entry-demo-note">Local setup · No organisation or account is saved to a server.</p>}
     </main>
   )
 }
@@ -342,10 +342,10 @@ function Success({ organization, onContinue, onBack, cloudManaged = false }) {
       <EntryHeader onHome={cloudManaged ? undefined : onBack} />
       <section className="entry-card success-card">
         <div className="success-mark">✓</div>
-        <span className="entry-eyebrow">{cloudManaged ? 'YOUR PRIVATE WORKSPACE IS READY' : 'YOUR DEMO WORKSPACE IS READY'}</span>
+        <span className="entry-eyebrow">{cloudManaged ? 'YOUR PRIVATE WORKSPACE IS READY' : 'YOUR LOCAL WORKSPACE IS READY'}</span>
         <h1>Lovely to have you,<br /><em>{organization.organizationName}.</em></h1>
         <p>Your session is set up for {category?.name ?? 'your business'} in {organization.city}, {organization.countryName}.</p>
-        <div className="entry-security-note" role="note"><strong>{cloudManaged ? 'Account-protected data' : 'Session-only demonstration'}</strong><span>{cloudManaged ? 'Your workspace is saved to your account. Sample inventory is included as a starting point and can be edited or removed.' : 'No account or organisation was created on a server. The chosen category opens its existing sample inventory; separate organisation data is not isolated yet.'}</span></div>
+        <div className="entry-security-note" role="note"><strong>{cloudManaged ? 'Account-protected data' : 'Browser-local workspace'}</strong><span>{cloudManaged ? 'Your workspace is saved to your account. Starting inventory is included as a starting point and can be edited or removed.' : 'No account or organisation was created on a server. The chosen category opens its existing starting inventory.'}</span></div>
         <button className="primary-button entry-submit" type="button" onClick={onContinue}>Continue to Dashboard</button>
         {!cloudManaged && <button className="entry-return-link" type="button" onClick={onBack}>Return to welcome</button>}
       </section>

@@ -265,7 +265,7 @@ export function OrdersPage({ orders, items, recipes, reservations, onCreate, onU
         <div><div className="eyebrow">CUSTOMER FULFILMENT</div><h1>Customer orders</h1><p className="welcome-subtitle">Build proposals, check ingredients, then confirm and fulfil each order.</p></div>
         <button className="primary-button" type="button" onClick={() => setDialog({ type: 'create' })}>＋ Create order</button>
       </div>
-      <div className="demo-banner"><span>DEMO DATA</span> New orders are proposals until confirmed. Confirmed materials are reserved; stock changes only when production or dispatch is recorded.</div>
+      <div className="demo-banner"><span>LOCAL DATA</span> New orders are proposals until confirmed. Confirmed materials are reserved; stock changes only when production or dispatch is recorded.</div>
       <div className="management-stats">
         <div><span>Total orders</span><strong>{orders.length}</strong></div>
         <div><span>Proposed</span><strong>{orders.filter((order) => !order.confirmed && order.status === 'Pending').length}</strong></div>
@@ -300,7 +300,7 @@ export function OrdersPage({ orders, items, recipes, reservations, onCreate, onU
           </table>
         </div>
         {!orders.length && <div className="business-empty-state"><CategoryIllustration category={businessCategory} /><strong>No orders yet</strong><span>Your first customer order will appear here.</span></div>}
-        <div className="table-footer">Showing <strong>{filtered.length}</strong> of {orders.length} orders <span>Demo order workflow</span></div>
+        <div className="table-footer">Showing <strong>{filtered.length}</strong> of {orders.length} orders <span>Production and order workflow</span></div>
       </article>
 
       {dialog?.type === 'create' && <OrderForm items={items} recipes={recipes} reservations={reservations} onClose={() => setDialog(null)} onSave={(data) => { onCreate(data); setDialog(null) }} />}

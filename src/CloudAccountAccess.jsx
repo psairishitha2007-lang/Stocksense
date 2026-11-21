@@ -63,9 +63,9 @@ export default function CloudAccountAccess({ onSubmit, onUseDemo, onSignOut, can
           <button className="entry-inline-button" type="button" onClick={() => { setMode(mode === 'signup' ? 'signin' : 'signup'); setFormError('') }}>
             {mode === 'signup' ? 'Already have an account? Sign in' : 'New to Kosthagara? Create an account'}
           </button>
-          <button className="entry-return-link" type="button" onClick={onUseDemo}>Continue with the browser-only demo</button>
+          <button className="entry-return-link" type="button" onClick={onUseDemo}>Continue with the browser-only workspace</button>
         </div>
-        <p className="entry-demo-note">Cloud accounts are enabled for this installation. Use the demo if you have not configured the database yet.</p>
+        <p className="entry-demo-note">Cloud accounts are enabled for this installation. Use the local workspace if you have not configured the database yet.</p>
       </section>
     </main>
   )

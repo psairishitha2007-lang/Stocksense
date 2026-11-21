@@ -188,7 +188,7 @@ function DashboardPage({ items, search, onNavigate, salesOrders, purchaseOrders,
               </tbody>
             </table>
           </div>
-          <div className="table-footer">Showing <strong>{Math.min(filteredLowItems.length, 6)}</strong> of {lowItems.length} low-stock items <span>Demo examples and user-entered data</span></div>
+          <div className="table-footer">Showing <strong>{Math.min(filteredLowItems.length, 6)}</strong> of {lowItems.length} low-stock items <span>Starting examples and user-entered data</span></div>
         </article>
 
         <article className="simulator-card">
@@ -218,7 +218,7 @@ function DashboardPage({ items, search, onNavigate, salesOrders, purchaseOrders,
           {!rangedTransactions.length && <p className="commerce-empty-note">No inventory movement was recorded in this range.</p>}
         </article>
       </section>
-      <footer className="page-footer"><span>© 2026 Kosthagara</span><span>Made with care for the makers <span className="footer-heart">♥</span></span><span>{cloudSession ? 'Private Supabase workspace' : 'Browser-local demo data'}</span></footer>
+      <footer className="page-footer"><span>© 2026 Kosthagara</span><span>Made with care for the makers <span className="footer-heart">♥</span></span><span>{cloudSession ? 'Private Supabase workspace' : 'Browser-local workspace'}</span></footer>
     </div>
   )
 }
@@ -252,7 +252,7 @@ function HelpCenterPage({ onNavigate }) {
         ))}
       </div>
       <article className="help-demo-note">
-        <strong>Working with demo data</strong>
+        <strong>Working with your data</strong>
         <p>Changes are saved in this browser or the connected private workspace. Use Business settings to export a backup before clearing browser data or changing devices.</p>
       </article>
     </div>
@@ -632,7 +632,7 @@ function AppContent({ cloudWorkspace, cloudSession, cloudClient, onCloudSignOut 
         currencyCode: updatedItem.currencyCode ?? currency,
         supplier: updatedItem.supplier,
         cost: updatedItem.costPerUnit,
-        notes: oldItem ? 'Quantity adjusted while editing item' : 'Initial demo opening stock',
+        notes: oldItem ? 'Quantity adjusted while editing item' : 'Initial opening stock',
       }
       if (transaction.quantity > 0 || !oldItem) setTransactions((current) => [transaction, ...current])
     } else if (oldItem) {
@@ -665,7 +665,7 @@ function AppContent({ cloudWorkspace, cloudSession, cloudClient, onCloudSignOut 
   function handleItemAction(action, item) {
     if (action === 'view') setModal({ type: 'details', item })
     if (action === 'edit') setModal({ type: 'edit', item })
-    if (action === 'delete' && window.confirm(`Delete ${item.name} from the demo item list? Existing history entries will remain.`)) {
+    if (action === 'delete' && window.confirm(`Delete ${item.name} from the item list? Existing history entries will remain.`)) {
       const usedByRecipe = Object.values(recipes).some((recipe) => recipe.some((component) => component.materialId === item.id))
       const usedByOrder = orders.some((order) => order.lines.some((line) => line.productId === item.id)
         || (order.requirements ?? []).some((requirement) => requirement.materialId === item.id))
@@ -1114,8 +1114,8 @@ function AppContent({ cloudWorkspace, cloudSession, cloudClient, onCloudSignOut 
             <button className="icon-button notification-button" type="button" aria-label={`${lowStockCount} low-stock alerts`} onClick={() => setActivePage('Inventory')}><Icon name="bell" /><span className="notification-dot" /></button>
             <div className="topbar-divider" />
             <div className="profile-wrap">
-              <button className="profile-button" type="button" aria-expanded={showProfileMenu} onClick={() => setShowProfileMenu((visible) => !visible)}><span className="avatar">{(organization?.ownerName ?? 'Amelia Morgan').split(/\s+/).map((part) => part[0]).slice(0, 2).join('').toUpperCase()}</span><span className="profile-copy"><strong>{organization?.ownerName ?? 'Amelia Morgan'}</strong><small>{organization?.organizationName ?? 'Demo business'}</small></span><span className="profile-chevron">⌄</span></button>
-              {showProfileMenu && <div className="profile-menu"><strong>{organization?.organizationName ?? 'Amelia Morgan'}</strong><span>{cloudSession ? 'Private account workspace · saved to Supabase' : 'Demo business · saved in this browser only'}</span><button type="button" onClick={() => { setActivePage('Business settings'); setShowProfileMenu(false) }}>Business settings</button>{!cloudSession && <button type="button" onClick={() => { setEntryFlowOpen(true); setShowProfileMenu(false) }}>Welcome &amp; demo onboarding</button>}{cloudSession && <button type="button" onClick={() => signOutOfCloudWorkspace().catch((error) => setNotice(`Sign out failed: ${error.message}`))}>Sign out</button>}<button type="button" onClick={() => setShowProfileMenu(false)}>Close menu</button></div>}
+              <button className="profile-button" type="button" aria-expanded={showProfileMenu} onClick={() => setShowProfileMenu((visible) => !visible)}><span className="avatar">{(organization?.ownerName ?? 'Amelia Morgan').split(/\s+/).map((part) => part[0]).slice(0, 2).join('').toUpperCase()}</span><span className="profile-copy"><strong>{organization?.ownerName ?? 'Amelia Morgan'}</strong><small>{organization?.organizationName ?? 'My business'}</small></span><span className="profile-chevron">⌄</span></button>
+              {showProfileMenu && <div className="profile-menu"><strong>{organization?.organizationName ?? 'Amelia Morgan'}</strong><span>{cloudSession ? 'Private account workspace · saved to Supabase' : 'Local business · saved in this browser only'}</span><button type="button" onClick={() => { setActivePage('Business settings'); setShowProfileMenu(false) }}>Business settings</button>{!cloudSession && <button type="button" onClick={() => { setEntryFlowOpen(true); setShowProfileMenu(false) }}>Welcome &amp; setup</button>}{cloudSession && <button type="button" onClick={() => signOutOfCloudWorkspace().catch((error) => setNotice(`Sign out failed: ${error.message}`))}>Sign out</button>}<button type="button" onClick={() => setShowProfileMenu(false)}>Close menu</button></div>}
             </div>
           </div>
         </header>

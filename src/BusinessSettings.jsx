@@ -113,9 +113,9 @@ export default function BusinessSettings({
         </div>
         <div className="currency-safety-note" role="note">
           <strong>Currency safety</strong>
-          <p>Changing the display currency does not convert, recalculate, or change any stored amount or stock quantity. No exchange rates are applied. Existing financial records should keep their original currency; this demo does not keep permanent multi-currency financial history.</p>
+          <p>Changing the display currency does not convert, recalculate, or change any stored amount or stock quantity. No exchange rates are applied. Existing financial records keep their original currency.</p>
         </div>
-        <p className="country-data-credit">Country and currency suggestions use the world-countries dataset. Verify local accounting and currency requirements before relying on demo values.</p>
+        <p className="country-data-credit">Country and currency suggestions use the world-countries dataset. Verify local accounting and currency requirements before relying on suggested values.</p>
       </article>
 
       <BackupRecovery

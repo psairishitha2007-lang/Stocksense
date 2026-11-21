@@ -324,7 +324,7 @@ function ItemDetails({ item, onClose, onEdit, onMovement }) {
           {item.sellingPrice != null && <div><span>Selling price · display {currency}</span><strong>{formatMoney(item.sellingPrice)}</strong>{item.sellingPriceCurrencyCode && item.sellingPriceCurrencyCode !== currency && <small className="table-secondary">Recorded as {item.sellingPriceCurrencyCode}; not converted</small>}</div>}
           <div><span>Reorder level</span><strong>{formatNumber(item.reorderLevel, { maximumFractionDigits: 2 })} {item.unit}</strong></div>
           <div><span>Stock status</span><strong className={isLow || isOut ? 'details-low' : 'details-ok'}>{isOut ? 'Out of stock' : isLow ? 'Low stock' : 'In stock'}</strong></div>
-          <div><span>Record source</span><strong>{item.dataSource === 'demo' ? 'Sample demo data' : 'Entered in this browser'}</strong></div>
+          <div><span>Record source</span><strong>{item.dataSource === 'demo' ? 'Starting example' : 'Entered in this browser'}</strong></div>
           <div><span>Supplier</span><strong>{item.supplier || 'Not specified'}</strong></div>
           {Object.entries(item.metadata ?? {}).filter(([, value]) => value).map(([key, value]) => <div key={key}><span>{({
             ingredients: 'Ingredients',
@@ -359,12 +359,12 @@ function ItemTable({ items, onAction }) {
     <div className="table-wrap inventory-table-wrap">
       <table className="inventory-table">
         <thead><tr>
-          <th>PRODUCT</th><th>SKU</th><th>CATEGORY</th><th>TYPE</th><th>AVAILABLE</th><th>COST / UNIT</th><th>SELL PRICE</th><th>REORDER</th><th>STATUS</th><th>ACTIONS</th>
+          <th>PRODUCT</th><th>SKU</th><th>BARCODE</th><th>CATEGORY</th><th>TYPE</th><th>AVAILABLE</th><th>COST / UNIT</th><th>SELL PRICE</th><th>REORDER</th><th>STATUS</th><th>ACTIONS</th>
         </tr></thead>
         <tbody>
           {items.map((item) => (
             <tr key={item.id}>
-              <td><div className="item-cell"><span className={`item-thumb ${item.tone}`}>{item.initials}</span><span><strong>{item.name}</strong><small>{item.dataSource === 'demo' ? 'Demo example' : 'User-entered'}{item.supplier ? ` · ${item.supplier}` : ''}</small></span></div></td>
+              <td><div className="item-cell"><span className={`item-thumb ${item.tone}`}>{item.initials}</span><span><strong>{item.name}</strong><small>{item.dataSource === 'demo' ? 'Starting example' : 'User-entered'}{item.supplier ? ` · ${item.supplier}` : ''}</small></span></div></td>
               <td><span className="sku-value">{item.sku}</span></td>
               <td><ItemCode value={item.sku} mode="barcode" /></td>
               <td>{item.category}</td>
@@ -418,7 +418,7 @@ export function ItemsPage({ items, search, onSearchChange, onAction, onAdd, busi
         <div><div className="eyebrow">YOUR PRODUCT CATALOG</div><h1>Items</h1><p className="welcome-subtitle">Manage materials, finished products, resale goods, and supplies.</p></div>
         <button type="button" className="primary-button" onClick={onAdd}>＋ Add item</button>
       </div>
-      <div className="demo-banner"><span>LOCAL DATA</span> Opening examples are marked “Demo example”; items you add are marked “User-entered”. Changes save in this browser when available, but do not sync to other devices.</div>
+      <div className="demo-banner"><span>LOCAL DATA</span> Starting examples are marked “Starting example”; items you add are marked “User-entered”. Changes save in this browser when available, but do not sync to other devices.</div>
       <div className="management-stats">
         <div><span>All items</span><strong>{items.length}</strong></div>
         <div><span>Raw materials</span><strong>{items.filter((item) => item.type === 'Raw Material').length}</strong></div>
@@ -439,7 +439,7 @@ export function ItemsPage({ items, search, onSearchChange, onAction, onAdd, busi
         </div>
         <ItemTable items={filteredItems} onAction={onAction} />
         {!items.length && <div className="business-empty-state"><CategoryIllustration category={businessCategory} /><strong>Your inventory is ready to begin</strong><span>Add your first product to start tracking stock.</span></div>}
-        <div className="table-footer">Showing <strong>{filteredItems.length}</strong> of {items.length} items <span>Demo examples and user-entered records</span></div>
+        <div className="table-footer">Showing <strong>{filteredItems.length}</strong> of {items.length} items <span>Starting examples and user-entered records</span></div>
       </article>
     </section>
   )
@@ -571,7 +571,7 @@ export function SimulatorPage({ items, recipes, reservations = {}, businessCateg
       <div className="page-title-row">
         <div><div className="eyebrow">YOUR SECRET WEAPON</div><h1>What If? Simulator</h1><p className="welcome-subtitle">Try a stock scenario using your current browser-local inventory.</p></div>
       </div>
-      <div className="demo-banner"><span>DEMO SIMULATION</span> Scenarios do not change your inventory. Actual inventory changes appear here automatically.</div>
+      <div className="demo-banner"><span>SCENARIO MODE</span> Scenarios do not change your inventory. Actual inventory changes appear here automatically.</div>
       <div className="simulator-page-grid">
         <article className="panel scenario-panel">
           <div className="simulator-category-heading"><div className="management-toolbar"><div><h2>Plan for a busy day</h2><p>See how extra demand could affect a product&apos;s stock.</p></div></div><CategoryIllustration category={businessCategory} /></div>
