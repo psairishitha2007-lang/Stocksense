@@ -12,8 +12,10 @@
     "sync-country-data": "node scripts/sync-country-data.mjs"
   },
   "dependencies": {
-    "@supabase/supabase-js": "^2.118.0",
+    "@supabase/supabase-js": "^2.119.0",
+    "qrcode.react": "^4.2.0",
     "react": "^19.3.1",
+    "react-barcode": "^1.6.1",
     "react-dom": "^19.3.1"
   },
   "devDependencies": {

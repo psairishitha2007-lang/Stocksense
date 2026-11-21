@@ -67,7 +67,7 @@ function Welcome({ onSignUp, onSignIn, onContinue }) {
           <h1>Make room for<br /><em>your next big thing.</em></h1>
           <p>Kosthagara helps small and home-based businesses keep inventory, orders, recipes, and purchasing in one thoughtful workspace.</p>
           <div className="welcome-actions">
-            <button className="primary-button" type="button" onClick={onSignUp}>Create a demo account</button>
+            <button className="primary-button" type="button" onClick={onSignUp}>Create a account</button>
             <button className="secondary-button" type="button" onClick={onSignIn}>Sign in</button>
           </div>
           <button className="entry-return-link" type="button" onClick={onContinue}>Return to the existing demo workspace</button>
@@ -198,7 +198,7 @@ function SignIn({ onBack, onContinue, onSignUp }) {
           <button className="primary-button entry-submit" type="submit">Continue</button>
         </form>
         <button className="secondary-button entry-submit" type="button" onClick={onContinue}>Open existing demo workspace</button>
-        <p className="entry-footer">New to Kosthagara? <button type="button" className="entry-inline-button" onClick={onSignUp}>Create a demo account</button></p>
+        <p className="entry-footer">New to Kosthagara? <button type="button" className="entry-inline-button" onClick={onSignUp}>Create a account</button></p>
       </section>
       <button className="entry-return-link" type="button" onClick={onBack}>Back to welcome</button>
     </main>

@@ -3,6 +3,7 @@ import { ITEM_TYPES, STOCK_OUT_REASONS, UNITS, UNIT_OPTIONS_BY_CATEGORY } from '
 import { calculateOrderRequirements, getRecipeUnitIssues, getRequirementShortages } from './orderData.js'
 import { useCurrency } from './currencyContext.js'
 import { CategoryIllustration } from './CategoryBranding.jsx'
+import ItemCode from './ItemCode.jsx'
 
 function Modal({ title, description, onClose, children, wide = false }) {
   return (
@@ -365,6 +366,7 @@ function ItemTable({ items, onAction }) {
             <tr key={item.id}>
               <td><div className="item-cell"><span className={`item-thumb ${item.tone}`}>{item.initials}</span><span><strong>{item.name}</strong><small>{item.dataSource === 'demo' ? 'Demo example' : 'User-entered'}{item.supplier ? ` · ${item.supplier}` : ''}</small></span></div></td>
               <td><span className="sku-value">{item.sku}</span></td>
+              <td><ItemCode value={item.sku} mode="barcode" /></td>
               <td>{item.category}</td>
               <td><span className={`type-badge ${item.type === 'Finished Product' ? 'finished' : ''}`}>{item.type}</span></td>
               <td><strong>{formatNumber(item.quantity, { maximumFractionDigits: 2 })} {item.unit}</strong></td>
